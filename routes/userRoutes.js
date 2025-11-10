@@ -6,30 +6,30 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 const {
-  getuser,
-  getallusers,
-  login,
-  register,
-  updateprofile,
-  deleteuser,
+  getUser,
+  getAllUsers,
+  loginUser,
+  registerUser,
+  updateProfile,
+  deleteUser,
 } = require("../controllers/userController");
 
-// Register a new user
-router.post("/register", register);
+// 📝 Register a new user
+router.post("/register", registerUser);
 
-// Login existing user
-router.post("/login", login);
+// 🔐 Login existing user
+router.post("/login", loginUser);
 
-// Get single user details
-router.get("/getuser/:id", auth, getuser);
+// 👤 Get single user details
+router.get("/getuser/:id", auth, getUser);
 
-// Get all users (Admin only)
-router.get("/getallusers", auth, getallusers);
+// 👥 Get all users (Admin only)
+router.get("/getallusers", auth, getAllUsers);
 
-// Update profile (User)
-router.put("/updateprofile", auth, updateprofile);
+// ✏️ Update profile (User)
+router.put("/updateprofile", auth, updateProfile);
 
-// Delete user (Admin/User)
-router.delete("/deleteuser", auth, deleteuser);
+// 🗑️ Delete user (Admin/User)
+router.delete("/deleteuser", auth, deleteUser);
 
 module.exports = router;
