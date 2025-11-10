@@ -6,7 +6,7 @@ const Doctor = require("../models/doctorModel");
 const User = require("../models/userModel");
 
 // 📋 Fetch all appointments (User/Doctor/Admin)
-const getallappointments = async (req, res) => {
+const getAllAppointments = async (req, res) => {
   try {
     const userId = req.locals;
     const user = await User.findById(userId);
@@ -31,7 +31,7 @@ const getallappointments = async (req, res) => {
 };
 
 // 📅 Book a new appointment
-const bookappointment = async (req, res) => {
+const bookAppointment = async (req, res) => {
   try {
     const { doctorId, date, time, reason } = req.body;
     if (!doctorId || !date || !time) {
@@ -55,7 +55,7 @@ const bookappointment = async (req, res) => {
 };
 
 // ✅ Mark appointment as completed
-const completed = async (req, res) => {
+const markAppointmentCompleted = async (req, res) => {
   try {
     const { appointmentId } = req.body;
     if (!appointmentId)
@@ -71,7 +71,7 @@ const completed = async (req, res) => {
 };
 
 module.exports = {
-  getallappointments,
-  bookappointment,
-  completed,
+  getAllAppointments,
+  bookAppointment,
+  markAppointmentCompleted,
 };
