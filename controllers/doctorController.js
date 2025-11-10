@@ -26,7 +26,7 @@ const getAllDoctors = async (req, res) => {
 };
 
 // 🧑‍⚕️ Get all pending doctor applications
-const getPendingDoctors = async (req, res) => {
+const getNotDoctors = async (req, res) => {
   try {
     const pendingDoctors = await Doctor.find({ isDoctor: false })
       .find({ _id: { $ne: req.locals } })
@@ -123,7 +123,7 @@ const deleteDoctor = async (req, res) => {
 
 module.exports = {
   getAllDoctors,
-  getPendingDoctors,
+  getNotDoctors,
   applyForDoctor,
   acceptDoctor,
   rejectDoctor,
