@@ -2,118 +2,76 @@
 // Developed by Priyanshu for MediBooker
 
 const Appointment = require("../models/appointmentModel");
-const Notification = require("../models/notificationModel");
+const Doctor = require("../models/doctorModel");
 const User = require("../models/userModel");
 
-// 📦 Fetch all appointments for user/doctor
-const getAllAppointments = async (req, res) => {
+// 📋 Fetch all appointments (User/Doctor/Admin)
+const getallappointments = async (req, res) => {
   try {
-    const keyword = req.query.search
-      ? {
-          $or: [{ userId: req.query.search }, { doctorId: req.query.search }],
-        }
-      : {};
+    const userId = req.locals;
+    const user = await User.findById(userId);
 
-    const appointments = await Appointment.find(keyword)
+    let query = {};
+    if (user.isDoctor) {
+      const doctor = await Doctor.findOne({ userId });
+      query = { doctorId: doctor._id };
+    } else if (!user.isAdmin) {
+      query = { userId };
+    }
+
+    const appointments = await Appointment.find(query)
       .populate("doctorId")
       .populate("userId");
 
-    if (!appointments || appointments.length === 0) {
-      return res.status(404).json({ message: "No appointments found." });
-    }
-
-    return res.status(200).json(appointments);
+    res.status(200).json(appointments);
   } catch (error) {
     console.error("Error fetching appointments:", error);
-    return res.status(500).json({ message: "Unable to fetch appointments." });
+    res.status(500).json({ message: "Unable to fetch appointments." });
   }
 };
 
-// 🩺 Book a new appointment
-const bookAppointment = async (req, res) => {
+// 📅 Book a new appointment
+const bookappointment = async (req, res) => {
   try {
-    const { date, time, doctorId, doctorname } = req.body;
-
-    if (!date || !time || !doctorId) {
-      return res.status(400).json({ message: "Missing required fields." });
+    const { doctorId, date, time, reason } = req.body;
+    if (!doctorId || !date || !time) {
+      return res.status(400).json({ message: "All fields are required." });
     }
 
-    const newAppointment = new Appointment({
-      date,
-      time,
+    const appointment = new Appointment({
       doctorId,
       userId: req.locals,
+      date,
+      time,
+      reason,
     });
+    await appointment.save();
 
-    // Notification for user
-    const userNotification = new Notification({
-      userId: req.locals,
-      content: `You booked an appointment with Dr. ${doctorname} for ${date} at ${time}.`,
-    });
-    await userNotification.save();
-
-    // Notification for doctor
-    const user = await User.findById(req.locals);
-    const doctorNotification = new Notification({
-      userId: doctorId,
-      content: `You have an appointment with ${user.firstname} ${user.lastname} on ${date} at ${time}.`,
-    });
-    await doctorNotification.save();
-
-    const result = await newAppointment.save();
-    return res.status(201).json({
-      message: "Appointment booked successfully.",
-      appointment: result,
-    });
+    res.status(201).json({ message: "Appointment booked successfully." });
   } catch (error) {
     console.error("Error booking appointment:", error);
-    return res.status(500).json({ message: "Unable to book appointment." });
+    res.status(500).json({ message: "Unable to book appointment." });
   }
 };
 
 // ✅ Mark appointment as completed
-const markAppointmentCompleted = async (req, res) => {
+const completed = async (req, res) => {
   try {
-    const { appointid, doctorId, doctorname } = req.body;
+    const { appointmentId } = req.body;
+    if (!appointmentId)
+      return res.status(400).json({ message: "Appointment ID required." });
 
-    if (!appointid || !doctorId || !doctorname) {
-      return res.status(400).json({ message: "Missing required fields." });
-    }
+    await Appointment.findByIdAndUpdate(appointmentId, { status: "completed" });
 
-    const appointment = await Appointment.findByIdAndUpdate(
-      appointid,
-      { status: "Completed" },
-      { new: true }
-    );
-
-    if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found." });
-    }
-
-    // Notify patient
-    const userNotification = new Notification({
-      userId: req.locals,
-      content: `Your appointment with ${doctorname} has been marked as completed.`,
-    });
-    await userNotification.save();
-
-    // Notify doctor
-    const user = await User.findById(req.locals);
-    const doctorNotification = new Notification({
-      userId: doctorId,
-      content: `Your appointment with ${user.firstname} ${user.lastname} has been completed.`,
-    });
-    await doctorNotification.save();
-
-    return res.status(200).json({ message: "Appointment marked as completed." });
+    res.status(200).json({ message: "Appointment marked as completed." });
   } catch (error) {
-    console.error("Error completing appointment:", error);
-    return res.status(500).json({ message: "Unable to complete appointment." });
+    console.error("Error marking appointment complete:", error);
+    res.status(500).json({ message: "Unable to mark appointment as completed." });
   }
 };
 
 module.exports = {
-  getAllAppointments,
-  bookAppointment,
-  markAppointmentCompleted,
+  getallappointments,
+  bookappointment,
+  completed,
 };
