@@ -11,7 +11,7 @@ require("./db/conn"); // Unified db connection file
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
-const appointmentRoutes = require("./routes/appointmentRoutes");
+const appointmentRoutes = require("./routes/appointRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 // Initialize App
