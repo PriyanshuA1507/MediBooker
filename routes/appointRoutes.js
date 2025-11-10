@@ -6,18 +6,18 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 const {
-  getallappointments,
-  bookappointment,
-  completed,
+  getAllAppointments,
+  bookAppointment,
+  markAppointmentCompleted,
 } = require("../controllers/appointmentController");
 
-// Fetch all appointments (User/Doctor/Admin)
-router.get("/getallappointments", auth, getallappointments);
+// 📋 Fetch all appointments (User / Doctor / Admin)
+router.get("/getallappointments", auth, getAllAppointments);
 
-// Book a new appointment
-router.post("/bookappointment", auth, bookappointment);
+// 🩺 Book a new appointment
+router.post("/bookappointment", auth, bookAppointment);
 
-// Mark appointment as completed
-router.put("/completed", auth, completed);
+// ✅ Mark appointment as completed
+router.put("/completed", auth, markAppointmentCompleted);
 
 module.exports = router;
