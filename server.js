@@ -12,7 +12,7 @@ require("./db/conn"); // Unified db connection file
 const userRoutes = require("./routes/userRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const appointmentRoutes = require("./routes/appointRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
+const notificationRoutes = require("./routes/notificationRouter"); // ✅ FIXED LINE
 
 // Initialize App
 const app = express();
