@@ -52,23 +52,30 @@ const getNotDoctors = async (req, res) => {
 // 📝 Apply to become a doctor
 const applyForDoctor = async (req, res) => {
   try {
+    // req.locals should contain logged-in user id (make sure your auth middleware sets it)
     const exists = await Doctor.findOne({ userId: req.locals });
     if (exists) {
-      return res
-        .status(400)
-        .json({ message: "Application already submitted." });
+      return res.status(400).json({ message: "Application already submitted." });
+    }
+
+    // Read fields directly from request body (not formDetails)
+    const { specialization, experience, fees } = req.body;
+
+    if (!specialization || !experience || !fees) {
+      return res.status(400).json({ message: "All fields required." });
     }
 
     const newDoctor = new Doctor({
-      ...req.body.formDetails,
+      specialization,
+      experience,
+      fees,
       userId: req.locals,
+      isDoctor: false,
     });
 
     await newDoctor.save();
 
-    return res
-      .status(201)
-      .json({ message: "Doctor application submitted successfully." });
+    return res.status(201).json({ message: "Doctor application submitted successfully." });
   } catch (error) {
     console.error("Error submitting application:", error);
     return res.status(500).json({ message: "Unable to submit application." });
