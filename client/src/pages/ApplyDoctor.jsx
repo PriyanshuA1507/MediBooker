@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/contact.css";
 
+// Base URL (correct)
 axios.defaults.baseURL =
   process.env.REACT_APP_SERVER_DOMAIN ||
   "https://medibooker-1.onrender.com/api";
@@ -35,7 +36,7 @@ const ApplyDoctor = () => {
     try {
       await toast.promise(
         axios.post(
-          "/doctor/applyfordoctor",
+          "/doctor/applyfordoctor",   // FIXED: backend route is /api/doctor/applyfordoctor
           {
             formDetails: {
               specialization,
