@@ -1,14 +1,24 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const morgan = require("morgan");
+// Database Configuration
+// Developed by Priyanshu for MediBooker
+
+const mongoose = require("mongoose");
 require("dotenv").config();
 
-const connectDB = require("./db/conn");
-connectDB();  // IMPORTANT!!!
+// ⚙️ Set strict query mode
+mongoose.set("strictQuery", true);
 
-// Import Routes
-const userRoutes = require("./routes/userRoutes");
-const doctorRoutes = require("./routes/doctorRoutes");
-const appointmentRoutes = require("./routes/appointRoutes");
-const notificationRoutes = require("./routes/notificationRouter");
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ Database Connection Failed: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
