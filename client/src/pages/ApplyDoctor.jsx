@@ -6,9 +6,9 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/contact.css";
 
-// Fix base URL for production fallback
 axios.defaults.baseURL =
-  process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com/api";
+  process.env.REACT_APP_SERVER_DOMAIN ||
+  "https://medibooker-1.onrender.com/api";
 
 const ApplyDoctor = () => {
   const navigate = useNavigate();
@@ -35,8 +35,14 @@ const ApplyDoctor = () => {
     try {
       await toast.promise(
         axios.post(
-          "/api/doctor/applyfordoctor",
-          { specialization, experience, fees },
+          "/doctor/applyfordoctor",
+          {
+            formDetails: {
+              specialization,
+              experience,
+              fees,
+            },
+          },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
