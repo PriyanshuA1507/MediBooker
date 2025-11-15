@@ -6,13 +6,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/contact.css";
 
-// Base URL (correct)
-axios.defaults.baseURL =
-  process.env.REACT_APP_SERVER_DOMAIN ||
-  "https://medibooker-1.onrender.com/api";
+const API = "https://medibooker-1.onrender.com/api/doctor/applyfordoctor";
 
 const ApplyDoctor = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     specialization: "",
     experience: "",
@@ -36,7 +34,7 @@ const ApplyDoctor = () => {
     try {
       await toast.promise(
         axios.post(
-          "/doctor/applyfordoctor",   // FIXED: backend route is /api/doctor/applyfordoctor
+          API, // FULL URL — NOT RELATIVE
           {
             formDetails: {
               specialization,
@@ -60,7 +58,7 @@ const ApplyDoctor = () => {
       navigate("/");
     } catch (error) {
       console.error("Doctor application error:", error);
-      toast.error("An unexpected error occurred.");
+      toast.error("Unexpected error occurred.");
     }
   };
 
@@ -80,6 +78,7 @@ const ApplyDoctor = () => {
               value={formData.specialization}
               onChange={handleChange}
             />
+
             <input
               type="number"
               name="experience"
@@ -88,6 +87,7 @@ const ApplyDoctor = () => {
               value={formData.experience}
               onChange={handleChange}
             />
+
             <input
               type="number"
               name="fees"
