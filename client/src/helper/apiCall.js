@@ -3,7 +3,9 @@
 
 import axios from "axios";
 
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
+// If env var exists (Vercel), use it. If not (Render), fallback to /api.
+axios.defaults.baseURL =
+  process.env.REACT_APP_SERVER_DOMAIN || "/api";
 
 const fetchData = async (endpoint) => {
   try {
