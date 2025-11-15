@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import DoctorCard from "../components/DoctorCard";
+import DoctorProfileCard from "../components/DoctorCard";
 import Loading from "../components/Loading";
 import Empty from "../components/Empty";
 import fetchData from "../helper/apiCall";
@@ -19,7 +19,6 @@ const Doctors = () => {
     try {
       dispatch(setLoading(true));
 
-      // FIXED: correct API path
       const response = await fetchData("/api/doctor/getalldoctors");
 
       setDoctors(response || []);
@@ -47,7 +46,7 @@ const Doctors = () => {
           {doctors.length > 0 ? (
             <div className="doctors-card-container">
               {doctors.map((doctor) => (
-                <DoctorCard key={doctor._id} ele={doctor} />
+                <DoctorProfileCard key={doctor._id} doctor={doctor} />
               ))}
             </div>
           ) : (
