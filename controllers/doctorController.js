@@ -10,14 +10,16 @@ const Appointment = require("../models/appointmentModel");
 // 🩺 Get all verified doctors
 const getAllDoctors = async (req, res) => {
   try {
-    // Only filter by isDoctor
-    const doctors = await Doctor.find({ isDoctor: true }).populate("userId");
+    const filter = { isDoctor: true };
 
-    if (!doctors || doctors.length === 0) {
-      return res.status(200).json([]); // return empty array instead of 404
+    // Exclude logged-in user (only if needed)
+    if (req.locals) {
+      filter.userId = { $ne: req.locals };
     }
 
-    return res.status(200).json(doctors);
+    const doctors = await Doctor.find(filter).populate("userId");
+
+    return res.status(200).json(doctors); // always return array
   } catch (error) {
     console.error("Error fetching doctors:", error);
     return res.status(500).json({ message: "Unable to fetch doctors." });
