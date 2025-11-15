@@ -6,13 +6,15 @@ const cors = require("cors");
 const path = require("path");
 const morgan = require("morgan");
 require("dotenv").config();
-require("./db/conn"); // Unified db connection file
+
+const connectDB = require("./db/conn"); 
+connectDB(); // <--- MANDATORY, missing earlier!
 
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const appointmentRoutes = require("./routes/appointRoutes");
-const notificationRoutes = require("./routes/notificationRouter"); // ✅ FIXED LINE
+const notificationRoutes = require("./routes/notificationRoutes");
 
 // Initialize App
 const app = express();
