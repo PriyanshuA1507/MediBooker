@@ -14,8 +14,7 @@ connectDB(); // <--- MANDATORY, missing earlier!
 const userRoutes = require("./routes/userRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const appointmentRoutes = require("./routes/appointRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
-
+const notificationRoutes = require("./routes/notificationRouter");
 // Initialize App
 const app = express();
 
