@@ -1,13 +1,13 @@
-
 import "../styles/doctorcard.css";
 import React, { useState } from "react";
 import BookDoctorAppointment from "./BookAppointment";
 import { toast } from "react-hot-toast";
 
-// Component developed by Priyanshu for MediBooker
-const DoctorProfileCard = ({ doctor }) => {
+const DoctorCard = ({ ele }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = localStorage.getItem("token") || "";
+
+  const doctor = ele;
 
   const handleAppointmentModal = () => {
     if (!token) {
@@ -25,24 +25,27 @@ const DoctorProfileCard = ({ doctor }) => {
             doctor?.userId?.pic ||
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
           }
-          alt={`${doctor?.userId?.firstname} ${doctor?.userId?.lastname}`}
+          alt={doctor?.userId?.name || "Doctor"}
           className="doctor-profile-img"
         />
       </div>
 
       <h3 className="card-name">
-        Dr. {doctor?.userId?.firstname} {doctor?.userId?.lastname}
+        Dr. {doctor?.userId?.name || "Unknown"}
       </h3>
 
       <p className="specialization">
         <strong>Specialization:</strong> {doctor?.specialization || "N/A"}
       </p>
+
       <p className="experience">
-        <strong>Experience:</strong> {doctor?.experience} yrs
+        <strong>Experience:</strong> {doctor?.experience || 0} yrs
       </p>
+
       <p className="fees">
-        <strong>Consultation Fee:</strong> ₹{doctor?.fees}
+        <strong>Consultation Fee:</strong> ₹{doctor?.fees || 0}
       </p>
+
       <p className="phone">
         <strong>Phone:</strong> {doctor?.userId?.mobile || "Not available"}
       </p>
@@ -52,13 +55,10 @@ const DoctorProfileCard = ({ doctor }) => {
       </button>
 
       {isModalOpen && (
-        <BookDoctorAppointment
-          setModalOpen={setIsModalOpen}
-          ele={doctor}
-        />
+        <BookDoctorAppointment setModalOpen={setIsModalOpen} ele={doctor} />
       )}
     </div>
   );
 };
 
-export default DoctorProfileCard;
+export default DoctorCard;
