@@ -4,7 +4,9 @@ import "../styles/register.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
+// Fix axios base URL for production
+axios.defaults.baseURL =
+  process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com/api";
 
 function Register() {
   const [file, setFile] = useState("");
@@ -20,7 +22,7 @@ function Register() {
 
   const inputChange = (e) => {
     const { name, value } = e.target;
-    return setFormDetails({
+    setFormDetails({
       ...formDetails,
       [name]: value,
     });
@@ -28,47 +30,51 @@ function Register() {
 
   const onUpload = async (element) => {
     setLoading(true);
+
     if (element.type === "image/jpeg" || element.type === "image/png") {
       const data = new FormData();
       data.append("file", element);
       data.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
       data.append("cloud_name", process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+
       fetch(process.env.REACT_APP_CLOUDINARY_BASE_URL, {
         method: "POST",
         body: data,
       })
         .then((res) => res.json())
-        .then((data) => setFile(data.url.toString()));
-      setLoading(false);
+        .then((data) => setFile(data.url.toString()))
+        .catch((err) => toast.error("Upload failed"))
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
-      toast.error("Please select an image in jpeg or png format");
+      toast.error("Please select a jpeg or png image");
     }
   };
 
   const formSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+
+    const { firstname, lastname, email, password, confpassword } = formDetails;
+
+    if (!firstname || !lastname || !email || !password || !confpassword)
+      return toast.error("All fields are required");
+
+    if (firstname.length < 3)
+      return toast.error("First name must be at least 3 characters");
+
+    if (lastname.length < 3)
+      return toast.error("Last name must be at least 3 characters");
+
+    if (password.length < 5)
+      return toast.error("Password must be at least 5 characters");
+
+    if (password !== confpassword)
+      return toast.error("Passwords do not match");
+
     try {
-      e.preventDefault();
-
-      if (loading) return;
-      if (file === "") return;
-
-      const { firstname, lastname, email, password, confpassword } =
-        formDetails;
-      if (!firstname || !lastname || !email || !password || !confpassword) {
-        return toast.error("Input field should not be empty");
-      } else if (firstname.length < 3) {
-        return toast.error("First name must be at least 3 characters long");
-      } else if (lastname.length < 3) {
-        return toast.error("Last name must be at least 3 characters long");
-      } else if (password.length < 5) {
-        return toast.error("Password must be at least 5 characters long");
-      } else if (password !== confpassword) {
-        return toast.error("Passwords do not match");
-      }
-
       await toast.promise(
-        axios.post("/user/register", {
+        axios.post("/api/user/register", {
           firstname,
           lastname,
           email,
@@ -76,24 +82,24 @@ function Register() {
           pic: file,
         }),
         {
-          pending: "Registering user...",
-          success: "User registered successfully",
-          error: "Unable to register user",
           loading: "Registering user...",
+          success: "Registration successful!",
+          error: "Unable to register user.",
         }
       );
-      return navigate("/login");
-    } catch (error) {}
+
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+      toast.error("Registration failed");
+    }
   };
 
   return (
     <section className="register-section flex-center">
       <div className="register-container flex-center">
         <h2 className="form-heading">Sign Up</h2>
-        <form
-          onSubmit={formSubmit}
-          className="register-form"
-        >
+        <form onSubmit={formSubmit} className="register-form">
           <input
             type="text"
             name="firstname"
@@ -121,8 +127,6 @@ function Register() {
           <input
             type="file"
             onChange={(e) => onUpload(e.target.files[0])}
-            name="profile-pic"
-            id="profile-pic"
             className="form-input"
           />
           <input
@@ -141,20 +145,13 @@ function Register() {
             value={formDetails.confpassword}
             onChange={inputChange}
           />
-          <button
-            type="submit"
-            className="btn form-btn"
-            disabled={loading ? true : false}
-          >
-            sign up
+          <button type="submit" className="btn form-btn" disabled={loading}>
+            Sign Up
           </button>
         </form>
         <p>
           Already a user?{" "}
-          <NavLink
-            className="login-link"
-            to={"/login"}
-          >
+          <NavLink className="login-link" to="/login">
             Log in
           </NavLink>
         </p>
