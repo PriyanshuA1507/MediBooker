@@ -8,20 +8,31 @@ const User = require("../models/userModel");
 // 📋 Fetch all appointments (User/Doctor/Admin)
 const getAllAppointments = async (req, res) => {
   try {
+    console.log("➡ req.locals (logged-in user):", req.locals);
+
     const userId = req.locals;
     const user = await User.findById(userId);
 
+    console.log("➡ USER FOUND:", user);
+
     let query = {};
+
     if (user.isDoctor) {
       const doctor = await Doctor.findOne({ userId });
-      query = { doctorId: doctor._id };
+      console.log("➡ DOCTOR PROFILE:", doctor);
+
+      query = { doctorId: doctor?._id };
     } else if (!user.isAdmin) {
       query = { userId };
     }
 
+    console.log("➡ FINAL QUERY:", query);
+
     const appointments = await Appointment.find(query)
       .populate("doctorId")
       .populate("userId");
+
+    console.log("➡ APPOINTMENTS RETURNED:", appointments);
 
     res.status(200).json(appointments);
   } catch (error) {
