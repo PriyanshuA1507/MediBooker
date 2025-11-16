@@ -1,5 +1,4 @@
-// Doctor Controller
-// Developed by Priyanshu for MediBooker
+
 
 const Doctor = require("../models/doctorModel");
 const User = require("../models/userModel");
@@ -17,7 +16,9 @@ const getAllDoctors = async (req, res) => {
       filter.userId = { $ne: req.locals };
     }
 
-    const doctors = await Doctor.find(filter).populate("userId");
+    const doctors = await Doctor.find(filter)
+  .populate("userId", "firstname lastname mobile pic email");
+
 
     return res.status(200).json(doctors); // always return array
   } catch (error) {
