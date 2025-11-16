@@ -11,21 +11,18 @@ const getAllDoctors = async (req, res) => {
   try {
     const filter = { isDoctor: true };
 
-    // Exclude logged-in user (only if needed)
-    if (req.locals) {
-      filter.userId = { $ne: req.locals };
-    }
-
-   const doctors = await Doctor.find({ isDoctor: true })
+const doctors = await Doctor.find({ isDoctor: true })
   .populate("userId", "firstname lastname pic mobile email");
 
 
-    return res.status(200).json(doctors); // always return array
+
+    return res.status(200).json(doctors);
   } catch (error) {
     console.error("Error fetching doctors:", error);
     return res.status(500).json({ message: "Unable to fetch doctors." });
   }
 };
+
 
 
 // 🧑‍⚕️ Get all pending doctor applications
@@ -79,6 +76,7 @@ const applyForDoctor = async (req, res) => {
     return res.status(500).json({ message: "Unable to submit application." });
   }
 };
+
 
 // ✅ Accept doctor application
 const acceptDoctor = async (req, res) => {
