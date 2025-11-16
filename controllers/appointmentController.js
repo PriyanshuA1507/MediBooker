@@ -58,10 +58,13 @@ const bookAppointment = async (req, res) => {
 const markAppointmentCompleted = async (req, res) => {
   try {
     const { appointmentId } = req.body;
+
     if (!appointmentId)
       return res.status(400).json({ message: "Appointment ID required." });
 
-    await Appointment.findByIdAndUpdate(appointmentId, { status: "completed" });
+    await Appointment.findByIdAndUpdate(appointmentId, {
+      status: "completed",
+    });
 
     res.status(200).json({ message: "Appointment marked as completed." });
   } catch (error) {
