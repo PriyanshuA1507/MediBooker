@@ -128,24 +128,28 @@ const rejectDoctor = async (req, res) => {
 };
 
 // 🗑️ Delete doctor account (Admin)
+// DELETE DOCTOR ACCOUNT (ADMIN ONLY)
 const deleteDoctor = async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId)
-      return res.status(400).json({ message: "User ID required." });
+    const doctorUserId = req.params.id;
 
-    await User.findByIdAndUpdate(userId, { isDoctor: false });
-    await Doctor.findOneAndDelete({ userId });
-    await Appointment.deleteMany({ userId });
+    if (!doctorUserId) {
+      return res.status(400).json({ message: "Doctor ID required" });
+    }
 
-    return res
-      .status(200)
-      .json({ message: "Doctor deleted successfully." });
+    // Delete doctor entry
+    await Doctor.deleteOne({ userId: doctorUserId });
+
+    // Update user -> remove doctor privilege
+    await User.findByIdAndUpdate(doctorUserId, {
+      isDoctor: false,
+      status: "rejected",
+    });
+
+    res.status(200).json({ message: "Doctor deleted successfully" });
   } catch (error) {
-    console.error("Error deleting doctor:", error);
-    return res
-      .status(500)
-      .json({ message: "Unable to delete doctor." });
+    console.error("Delete doctor error:", error);
+    res.status(500).json({ message: "Server error deleting doctor" });
   }
 };
 
