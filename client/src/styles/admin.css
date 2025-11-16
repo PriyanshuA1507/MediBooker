@@ -1,0 +1,4 @@
+.admin-table { width:100%; border-collapse:collapse; }
+.admin-table th, .admin-table td { padding:10px; border:1px solid #eee; text-align:left; }
+.admin-table .accept-btn { background:#2ecc71; color:white; margin-right:8px; }
+.admin-table .reject-btn { background:#e74c3c; color:white; }
