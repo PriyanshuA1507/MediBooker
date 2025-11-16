@@ -14,9 +14,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token") || "";
+  const token = localStorage.getItem("token");
   let user = null;
 
+  // Safe decode
   try {
     user = token ? jwt_decode(token) : null;
   } catch {
@@ -29,68 +30,73 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const handleMenuToggle = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <header className="navbar-header">
       <nav className={`navbar ${isMenuOpen ? "active" : ""}`}>
         <h2 className="nav-logo">
-          <NavLink to={"/"}>MediBooker</NavLink>
+          <NavLink to="/">MediBooker</NavLink>
         </h2>
 
         <ul className="nav-links">
           <li>
-            <NavLink to={"/"}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to={"/doctors"}>Doctors</NavLink>
+            <NavLink to="/">Home</NavLink>
           </li>
 
-          {/* ----------------- ADMIN LINKS ----------------- */}
+          <li>
+            <NavLink to="/doctors">Doctors</NavLink>
+          </li>
+
+          {/* ----------- ADMIN LINKS ----------- */}
           {token && user?.isAdmin && (
             <>
               <li>
-                <NavLink to={"/dashboard/users"}>Dashboard</NavLink>
+                <NavLink to="/admin/doctors">Doctor Applications</NavLink>
               </li>
+
               <li>
-                <NavLink to={"/admin/doctors"}>Doctor Applications</NavLink>
+                <NavLink to="/dashboard/users">Dashboard</NavLink>
               </li>
             </>
           )}
 
-          {/* ----------------- NORMAL USER LINKS ----------------- */}
+          {/* ----------- NORMAL USER LINKS ----------- */}
           {token && !user?.isAdmin && (
             <>
               <li>
-                <NavLink to={"/appointments"}>Appointments</NavLink>
+                <NavLink to="/appointments">Appointments</NavLink>
               </li>
+
               <li>
-                <NavLink to={"/notifications"}>Notifications</NavLink>
+                <NavLink to="/notifications">Notifications</NavLink>
               </li>
+
               <li>
-                <NavLink to={"/applyfordoctor"}>Apply as Doctor</NavLink>
+                <NavLink to="/applyfordoctor">Apply as Doctor</NavLink>
               </li>
+
               <li>
-                <HashLink to={"/#contact"}>Contact</HashLink>
+                <HashLink to="/#contact">Contact</HashLink>
               </li>
+
               <li>
-                <NavLink to={"/profile"}>Profile</NavLink>
+                <NavLink to="/profile">Profile</NavLink>
               </li>
             </>
           )}
 
-          {/* ----------------- AUTH BUTTONS ----------------- */}
+          {/* ----------- AUTH BUTTONS ----------- */}
           {!token ? (
             <>
               <li>
-                <NavLink className="btn nav-btn" to={"/login"}>
+                <NavLink className="btn nav-btn" to="/login">
                   Login
                 </NavLink>
               </li>
+
               <li>
-                <NavLink className="btn nav-btn" to={"/register"}>
+                <NavLink className="btn nav-btn" to="/register">
                   Register
                 </NavLink>
               </li>
