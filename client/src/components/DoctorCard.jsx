@@ -7,8 +7,8 @@ const DoctorCard = ({ ele }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = localStorage.getItem("token") || "";
 
-  const doctor = ele || {};
-  const user = doctor.userId || {};
+  const doctor = ele;
+  const user = doctor?.userId || {};
 
   const handleAppointmentModal = () => {
     if (!token) {
@@ -26,7 +26,7 @@ const DoctorCard = ({ ele }) => {
             user.pic ||
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
           }
-          alt={`${user.firstname || ""} ${user.lastname || ""}`}
+          alt={`${user.firstname} ${user.lastname}`}
           className="doctor-profile-img"
         />
       </div>
