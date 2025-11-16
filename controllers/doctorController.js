@@ -75,6 +75,7 @@ const applyForDoctor = async (req, res) => {
 
 
 
+
 // ✅ Accept doctor application
 const acceptDoctor = async (req, res) => {
   try {
