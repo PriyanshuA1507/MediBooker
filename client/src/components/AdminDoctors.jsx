@@ -1,151 +1,142 @@
-
-
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import fetchData from "../helper/apiCall";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Loading from "./Loading";
-import { setLoading } from "../redux/reducers/rootSlice";
-import { useDispatch, useSelector } from "react-redux";
-import Empty from "./Empty";
-import fetchData from "../helper/apiCall";
-import "../styles/user.css";
+import Loading from "../components/Loading";
+import "../styles/admin.css";
 
-// Developed by Priyanshu for MediBooker Admin Dashboard
-axios.defaults.baseURL = process.env.REACT_APP_MEDIBOOKER_API;
+axios.defaults.baseURL =
+  process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com";
 
-const AdminAllDoctors = () => {
-  const [doctorList, setDoctorList] = useState([]);
-  const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.root);
+const AdminDoctors = () => {
+  const [pendingDoctors, setPendingDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchAllDoctors = async () => {
+  const loadPendingDoctors = async () => {
     try {
-      dispatch(setLoading(true));
-      const data = await fetchData(`/doctor/getalldoctors`);
-      setDoctorList(data);
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
-      toast.error("Failed to fetch doctor list. Please try again later.");
+      setLoading(true);
+      const res = await fetchData("/doctor/getnotdoctors");
+      setPendingDoctors(res || []);
+    } catch {
+      toast.error("Unable to load doctor applications");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteDoctor = async (userId) => {
+  const approveDoctor = async (doctor) => {
     try {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to remove this doctor?"
+      await toast.promise(
+        axios.put(
+          "/api/doctor/acceptdoctor",
+          { id: doctor?.userId?._id },
+          { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        ),
+        {
+          loading: "Approving doctor...",
+          success: "Doctor approved!",
+          error: "Failed to approve doctor",
+        }
       );
-      if (confirmDelete) {
-        await toast.promise(
-          axios.put(
-            "/doctor/deletedoctor",
-            { userId },
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          ),
-          {
-            success: "Doctor removed successfully",
-            error: "Unable to remove doctor",
-            loading: "Removing doctor...",
-          }
-        );
-        fetchAllDoctors();
-      }
-    } catch (error) {
-      toast.error("Something went wrong while deleting the doctor.");
+      loadPendingDoctors();
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const rejectDoctor = async (doctor) => {
+    try {
+      await toast.promise(
+        axios.put(
+          "/api/doctor/rejectdoctor",
+          { id: doctor?.userId?._id },
+          { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        ),
+        {
+          loading: "Rejecting...",
+          success: "Doctor rejected!",
+          error: "Failed to reject doctor",
+        }
+      );
+      loadPendingDoctors();
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const deleteDoctor = async (doctor) => {
+    try {
+      await toast.promise(
+        axios.delete("/api/doctor/deletedoctor", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          data: { id: doctor?.userId?._id },
+        }),
+        {
+          loading: "Deleting...",
+          success: "Doctor deleted!",
+          error: "Failed to delete doctor",
+        }
+      );
+      loadPendingDoctors();
+    } catch {
+      toast.error("Something went wrong");
     }
   };
 
   useEffect(() => {
-    fetchAllDoctors();
+    loadPendingDoctors();
   }, []);
 
   return (
     <>
+      <Navbar />
       {loading ? (
         <Loading />
       ) : (
-        <section className="user-section">
-          <h3 className="home-sub-heading">Registered Doctors</h3>
-          <p className="data-refresh-time">
-            Last refreshed: {new Date().toLocaleString()}
-          </p>
+        <section className="container notif-section">
+          <h2 className="page-heading">Pending Doctor Applications</h2>
 
-          {doctorList.length > 0 ? (
-            <div className="user-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Profile</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Mobile No.</th>
-                    <th>Experience</th>
-                    <th>Specialization</th>
-                    <th>Consultation Fee</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {doctorList?.map((doctor, i) => {
-                    const {
-                      userId,
-                      experience,
-                      specialization,
-                      fees,
-                    } = doctor;
-
-                    const doctorPic =
-                      userId?.pic ||
-                      "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
-                    const doctorName = `${userId?.firstname} ${userId?.lastname}`;
-
-                    return (
-                      <tr key={doctor?._id}>
-                        <td>{i + 1}</td>
-                        <td>
-                          <img
-                            className="user-table-pic"
-                            src={doctorPic}
-                            alt={doctorName}
-                          />
-                        </td>
-                        <td>{userId?.firstname}</td>
-                        <td>{userId?.lastname}</td>
-                        <td>{userId?.email}</td>
-                        <td>{userId?.mobile}</td>
-                        <td>{experience}</td>
-                        <td>{specialization}</td>
-                        <td>{fees}</td>
-                        <td className="select">
-                          <button
-                            className="btn user-btn"
-                            onClick={() => handleDeleteDoctor(userId?._id)}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+          {pendingDoctors.length === 0 ? (
+            <p>No pending applications</p>
           ) : (
-            <>
-              <Empty />
-              <p className="no-data-text">No doctors registered yet.</p>
-            </>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Specialization</th>
+                  <th>Experience</th>
+                  <th>Fees</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {pendingDoctors.map((doc) => (
+                  <tr key={doc._id}>
+                    <td>
+                      {doc?.userId?.firstname} {doc?.userId?.lastname}
+                    </td>
+                    <td>{doc.specialization}</td>
+                    <td>{doc.experience} yrs</td>
+                    <td>₹{doc.fees}</td>
+                    <td>
+                      <button className="btn accept-btn" onClick={() => approveDoctor(doc)}>Approve</button>
+                      <button className="btn reject-btn" onClick={() => rejectDoctor(doc)}>Reject</button>
+                      <button className="btn delete-btn" onClick={() => deleteDoctor(doc)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </section>
       )}
+
+      <Footer />
     </>
   );
 };
 
-export default AdminAllDoctors;
+export default AdminDoctors;
