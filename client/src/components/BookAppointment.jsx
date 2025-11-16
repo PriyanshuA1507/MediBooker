@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 
 // Component developed by Priyanshu for MediBooker Patient Dashboard
-axios.defaults.baseURL = process.env.REACT_APP_MEDIBOOKER_API;
+axios.defaults.baseURL =
+  process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com";
 
 const BookDoctorAppointment = ({ setModalOpen, ele }) => {
   const [appointmentDetails, setAppointmentDetails] = useState({
@@ -28,8 +29,8 @@ const BookDoctorAppointment = ({ setModalOpen, ele }) => {
 
     try {
       await toast.promise(
-       axios.post(
-  "/appointment/bookappointment",
+      axios.post(
+  "/api/appointment/bookappointment",
   {
     doctorId: ele?._id,   // FIXED
     date: appointmentDetails.date,
