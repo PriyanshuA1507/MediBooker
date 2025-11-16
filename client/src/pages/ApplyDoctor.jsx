@@ -33,19 +33,13 @@ const ApplyDoctor = () => {
 
     try {
       await toast.promise(
-        axios.post(
-          API,
-          {
-            specialization,
-            experience,
-            fees, // <-- NO formDetails wrapper
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        ),
+       axios.post(API, {
+  specialization,
+  experience,
+  fees
+}, {
+  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+}),
         {
           loading: "Submitting your application...",
           success: "Doctor application submitted successfully!",
