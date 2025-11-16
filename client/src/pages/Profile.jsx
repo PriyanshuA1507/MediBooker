@@ -32,7 +32,7 @@ function Profile() {
   const getUser = async () => {
     try {
       dispatch(setLoading(true));
-      const temp = await fetchData(`/api/user/getuser/${userId}`);
+     const temp = await fetchData(`/user/getuser/${userId}`);
 
       setFormDetails({
         ...temp,
@@ -89,8 +89,7 @@ function Profile() {
         return toast.error("Passwords do not match");
 
       await toast.promise(
-        axios.put(
-          "/api/user/updateprofile",
+        axios.put("/user/updateprofile",
           {
             firstname,
             lastname,
