@@ -1,65 +1,68 @@
-import "../styles/doctorcard.css";
-import React, { useState } from "react";
-import BookDoctorAppointment from "./BookAppointment";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import DoctorProfileCard from "../components/DoctorCard";
+import Loading from "../components/Loading";
+import Empty from "../components/Empty";
+import fetchData from "../helper/apiCall";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../redux/reducers/rootSlice";
+import "../styles/doctors.css";
+import toast from "react-hot-toast";
 
-const DoctorCard = ({ ele }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const token = localStorage.getItem("token") || "";
+const Doctors = () => {
+  const [doctors, setDoctors] = useState([]);
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.root);
 
-  const doctor = ele;
-  const user = doctor?.userId || {};
+  const loadAllDoctors = async () => {
+    try {
+      dispatch(setLoading(true));
 
-  const handleAppointmentModal = () => {
-    if (!token) {
-      toast.error("Please log in to book an appointment.");
-      return;
+      const response = await fetchData("/api/doctor/getalldoctors");
+      console.log("RESPONSE FROM BACKEND:", response);
+
+      // 🔥 IMPORTANT — Filter out doctors with missing or corrupted userId
+      const cleanedDoctors = (response || []).filter(
+        (d) => d && d.userId && d.userId.firstname
+      );
+
+      setDoctors(cleanedDoctors);
+    } catch (error) {
+      console.error("Error fetching doctors:", error);
+      toast.error("Unable to fetch doctors.");
+    } finally {
+      dispatch(setLoading(false));
     }
-    setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    loadAllDoctors();
+  }, []);
+
   return (
-    <div className="doctor-card">
-      <div className="card-img flex-center">
-        <img
-          src={
-            user.pic ||
-            "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-          }
-          alt={`${user.firstname} ${user.lastname}`}
-          className="doctor-profile-img"
-        />
-      </div>
+    <>
+      <Navbar />
+      {loading ? (
+        <Loading />
+      ) : (
+        <section className="container doctors">
+          <h2 className="page-heading">Our Verified Doctors</h2>
 
-      <h3 className="card-name">
-        Dr. {user.firstname || "Unknown"} {user.lastname || ""}
-      </h3>
-
-      <p className="specialization">
-        <strong>Specialization:</strong> {doctor.specialization || "N/A"}
-      </p>
-
-      <p className="experience">
-        <strong>Experience:</strong> {doctor.experience || 0} yrs
-      </p>
-
-      <p className="fees">
-        <strong>Consultation Fee:</strong> ₹{doctor.fees || 0}
-      </p>
-
-      <p className="phone">
-        <strong>Phone:</strong> {user.mobile || "Not available"}
-      </p>
-
-      <button className="btn appointment-btn" onClick={handleAppointmentModal}>
-        Book Appointment
-      </button>
-
-      {isModalOpen && (
-        <BookDoctorAppointment setModalOpen={setIsModalOpen} ele={doctor} />
+          {doctors.length > 0 ? (
+            <div className="doctors-card-container">
+              {doctors.map((doctor) => (
+                <DoctorProfileCard key={doctor._id} ele={doctor} />
+              ))}
+            </div>
+          ) : (
+            <Empty />
+          )}
+        </section>
       )}
-    </div>
+      <Footer />
+    </>
   );
 };
 
-export default DoctorCard;
+export default Doctors;
