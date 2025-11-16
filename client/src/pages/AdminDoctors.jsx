@@ -11,11 +11,11 @@ const AdminDoctors = () => {
   const [pendingDoctors, setPendingDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load all pending doctors
   const loadPendingDoctors = async () => {
     try {
       setLoading(true);
-      const res = await fetchData("/doctor/getnotdoctors"); // Correct path
+
+      const res = await fetchData("/api/doctor/getnotdoctors");
       setPendingDoctors(res || []);
     } catch {
       toast.error("Unable to load doctor applications");
@@ -24,12 +24,11 @@ const AdminDoctors = () => {
     }
   };
 
-  // APPROVE DOCTOR
   const approveDoctor = async (doctor) => {
     try {
       await toast.promise(
         axios.put(
-          "/doctor/acceptdoctor",
+          "/api/doctor/acceptdoctor",
           { id: doctor?.userId?._id },
           { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
         ),
@@ -45,12 +44,11 @@ const AdminDoctors = () => {
     }
   };
 
-  // REJECT DOCTOR
   const rejectDoctor = async (doctor) => {
     try {
       await toast.promise(
         axios.put(
-          "/doctor/rejectdoctor",
+          "/api/doctor/rejectdoctor",
           { id: doctor?.userId?._id },
           { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
         ),
@@ -66,19 +64,16 @@ const AdminDoctors = () => {
     }
   };
 
-  // DELETE DOCTOR
   const deleteDoctor = async (doctor) => {
     try {
       await toast.promise(
-        axios.delete("/doctor/deletedoctor", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          data: { id: doctor?.userId?._id }, // DELETE requires data in config
+        axios.delete("/api/doctor/deletedoctor", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          data: { id: doctor?.userId?._id }
         }),
         {
           loading: "Deleting doctor...",
-          success: "Doctor deleted successfully!",
+          success: "Doctor deleted!",
           error: "Failed to delete doctor.",
         }
       );
@@ -95,7 +90,6 @@ const AdminDoctors = () => {
   return (
     <>
       <Navbar />
-
       {loading ? (
         <Loading />
       ) : (
@@ -119,34 +113,14 @@ const AdminDoctors = () => {
               <tbody>
                 {pendingDoctors.map((doc) => (
                   <tr key={doc._id}>
-                    <td>
-                      {doc?.userId?.firstname} {doc?.userId?.lastname}
-                    </td>
+                    <td>{doc.userId?.firstname} {doc.userId?.lastname}</td>
                     <td>{doc.specialization}</td>
                     <td>{doc.experience} yrs</td>
                     <td>₹{doc.fees}</td>
-
                     <td>
-                      <button
-                        className="btn accept-btn"
-                        onClick={() => approveDoctor(doc)}
-                      >
-                        Approve
-                      </button>
-
-                      <button
-                        className="btn reject-btn"
-                        onClick={() => rejectDoctor(doc)}
-                      >
-                        Reject
-                      </button>
-
-                      <button
-                        className="btn delete-btn"
-                        onClick={() => deleteDoctor(doc)}
-                      >
-                        Delete
-                      </button>
+                      <button className="btn accept-btn" onClick={() => approveDoctor(doc)}>Approve</button>
+                      <button className="btn reject-btn" onClick={() => rejectDoctor(doc)}>Reject</button>
+                      <button className="btn delete-btn" onClick={() => deleteDoctor(doc)}>Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -155,7 +129,6 @@ const AdminDoctors = () => {
           )}
         </section>
       )}
-
       <Footer />
     </>
   );
