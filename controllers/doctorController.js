@@ -10,12 +10,8 @@ const Appointment = require("../models/appointmentModel");
 // 🩺 Get all verified doctors
 const getAllDoctors = async (req, res) => {
   try {
-    const filter = { isDoctor: true };
-
-const doctors = await Doctor.find({ isDoctor: true })
-  .populate("userId", "firstname lastname pic mobile email");
-
-
+    const doctors = await Doctor.find({ isDoctor: true })
+      .populate("userId", "firstname lastname pic mobile");
 
     return res.status(200).json(doctors);
   } catch (error) {
