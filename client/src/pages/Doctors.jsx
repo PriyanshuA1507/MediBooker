@@ -15,21 +15,21 @@ const Doctors = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
 
-  const loadAllDoctors = async () => {
-    try {
-      dispatch(setLoading(true));
+const loadAllDoctors = async () => {
+  try {
+    dispatch(setLoading(true));
 
-      const response = await fetchData("/api/doctor/getalldoctors");
+    const response = await fetchData("/api/doctor/getalldoctors");
 
-      setDoctors(response || []);
-    } catch (error) {
-      console.error("Error fetching doctors:", error);
-      toast.error("Unable to fetch doctors at the moment.");
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
+    console.log("RESPONSE FROM BACKEND:", response);  // ⬅️ ADD THIS
 
+    setDoctors(response || []);
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
   useEffect(() => {
     loadAllDoctors();
   }, []);
