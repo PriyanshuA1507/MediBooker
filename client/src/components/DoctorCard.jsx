@@ -7,8 +7,8 @@ const DoctorCard = ({ ele }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = localStorage.getItem("token") || "";
 
-  const doctor = ele;
-  const user = doctor?.userId || {};
+  const doctor = ele || {};
+  const user = doctor.userId || {};
 
   const handleAppointmentModal = () => {
     if (!token) {
@@ -56,10 +56,7 @@ const DoctorCard = ({ ele }) => {
       </button>
 
       {isModalOpen && (
-        <BookDoctorAppointment
-          setModalOpen={setIsModalOpen}
-          ele={doctor}
-        />
+        <BookDoctorAppointment setModalOpen={setIsModalOpen} ele={doctor} />
       )}
     </div>
   );
