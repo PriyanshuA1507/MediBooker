@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import "../styles/bookappointment.css";
 import axios from "axios";
@@ -61,13 +59,47 @@ const BookDoctorAppointment = ({ setModalOpen, ele }) => {
     <>
       <div className="modal flex-center">
         <div className="modal__content">
-          <h2 className="page-heading">Book an Appointment</h2>
+
+          {/* Close button */}
           <IoMdClose
             onClick={() => setModalOpen(false)}
             className="close-btn"
             title="Close"
           />
 
+          <h2 className="page-heading">Book Appointment</h2>
+
+          {/* ---- Doctor Details Section ---- */}
+          <div className="doctor-details-modal">
+            <img
+              src={
+                ele?.userId?.pic ||
+                "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+              }
+              alt="Doctor"
+              className="doctor-modal-img"
+            />
+
+            <div className="doctor-modal-info">
+              <h3>
+                Dr. {ele?.userId?.firstname} {ele?.userId?.lastname}
+              </h3>
+
+              <p>
+                <strong>Specialization:</strong> {ele?.specialization || "N/A"}
+              </p>
+
+              <p>
+                <strong>Experience:</strong> {ele?.experience || 0} yrs
+              </p>
+
+              <p>
+                <strong>Consultation Fee:</strong> ₹{ele?.fees || 0}
+              </p>
+            </div>
+          </div>
+
+          {/* ---- Booking Form ---- */}
           <div className="register-container flex-center book">
             <form className="register-form" onSubmit={handleBookAppointment}>
               <input
@@ -78,6 +110,7 @@ const BookDoctorAppointment = ({ setModalOpen, ele }) => {
                 onChange={handleInputChange}
                 required
               />
+
               <input
                 type="time"
                 name="time"
@@ -86,6 +119,7 @@ const BookDoctorAppointment = ({ setModalOpen, ele }) => {
                 onChange={handleInputChange}
                 required
               />
+
               <button type="submit" className="btn form-btn">
                 Confirm Booking
               </button>
