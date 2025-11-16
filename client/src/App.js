@@ -6,6 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { Protected, Public, Admin } from "./middleware/route";
 import React, { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
+import AdminDoctors from "./pages/AdminDoctors";
+
 
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -22,6 +24,7 @@ function App() {
       <Toaster />
       <Suspense fallback={<Loading />}>
         <Routes>
+          <Route path="/admin/doctors" element={<AdminDoctors />} />
           <Route
             path="/login"
             element={<Login />}
