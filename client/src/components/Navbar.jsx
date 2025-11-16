@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
@@ -16,7 +15,13 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token") || "";
-  const user = token ? jwt_decode(token) : null;
+  let user = null;
+
+  try {
+    user = token ? jwt_decode(token) : null;
+  } catch {
+    user = null;
+  }
 
   const handleLogout = () => {
     dispatch(setUserInfo({}));
@@ -43,12 +48,19 @@ const Navbar = () => {
             <NavLink to={"/doctors"}>Doctors</NavLink>
           </li>
 
+          {/* ----------------- ADMIN LINKS ----------------- */}
           {token && user?.isAdmin && (
-            <li>
-              <NavLink to={"/dashboard/users"}>Dashboard</NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink to={"/dashboard/users"}>Dashboard</NavLink>
+              </li>
+              <li>
+                <NavLink to={"/admin/doctors"}>Doctor Applications</NavLink>
+              </li>
+            </>
           )}
 
+          {/* ----------------- NORMAL USER LINKS ----------------- */}
           {token && !user?.isAdmin && (
             <>
               <li>
@@ -69,6 +81,7 @@ const Navbar = () => {
             </>
           )}
 
+          {/* ----------------- AUTH BUTTONS ----------------- */}
           {!token ? (
             <>
               <li>
