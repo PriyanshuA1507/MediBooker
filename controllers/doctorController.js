@@ -1,4 +1,5 @@
-
+// Doctor Controller
+// Developed by Priyanshu for MediBooker
 
 const Doctor = require("../models/doctorModel");
 const User = require("../models/userModel");
@@ -50,20 +51,26 @@ const getNotDoctors = async (req, res) => {
 // 📝 Apply to become a doctor
 const applyForDoctor = async (req, res) => {
   try {
-    const exists = await Doctor.findOne({ userId: req.locals });
-    if (exists) {
-      return res.status(400).json({ message: "Application already submitted." });
+    const { specialization, experience, fees } = req.body;
+
+    if (!specialization || !experience || !fees) {
+      return res
+        .status(400)
+        .json({ message: "All doctor fields are required." });
     }
 
-    // Extract fields properly
-    const { specialization, experience, fees } = req.body.formDetails;
+    const exists = await Doctor.findOne({ userId: req.locals });
+    if (exists) {
+      return res
+        .status(400)
+        .json({ message: "Application already submitted." });
+    }
 
     const newDoctor = new Doctor({
       specialization,
       experience,
       fees,
       userId: req.locals,
-      isDoctor: false,
     });
 
     await newDoctor.save();
@@ -76,6 +83,7 @@ const applyForDoctor = async (req, res) => {
     return res.status(500).json({ message: "Unable to submit application." });
   }
 };
+
 
 
 // ✅ Accept doctor application
