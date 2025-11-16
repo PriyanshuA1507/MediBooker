@@ -8,18 +8,19 @@ const SERVER =
   process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com";
 
 // 🚀 axios base URL
-axios.defaults.baseURL = SERVER;
+axios.defaults.baseURL =
+  process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com";
 
 const fetchData = async (endpoint) => {
   try {
     // 🔥 Always prepend "/api"
     const url = `/api${endpoint}`;
 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const response = await axios.get(endpoint, {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+});;
 
     return response.data;
   } catch (error) {
