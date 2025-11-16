@@ -19,7 +19,7 @@ const Doctors = () => {
     try {
       dispatch(setLoading(true));
 
-      const response = await fetchData("/api/doctor/getalldoctors");
+      const response = await fetchData("/doctor/getalldoctors");;
       console.log("RESPONSE FROM BACKEND:", response);
 
       // 🔥 IMPORTANT — Filter out doctors with missing or corrupted userId
