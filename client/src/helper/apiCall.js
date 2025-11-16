@@ -1,11 +1,21 @@
+// API helper for MediBooker
+// Developed by Priyanshu
+
 import axios from "axios";
 
-axios.defaults.baseURL =
+// ✅ Backend base URL — MUST NOT include /api
+const SERVER =
   process.env.REACT_APP_SERVER_DOMAIN || "https://medibooker-1.onrender.com";
+
+// 🚀 axios base URL
+axios.defaults.baseURL = SERVER;
 
 const fetchData = async (endpoint) => {
   try {
-    const response = await axios.get(`/api${endpoint}`, {
+    // 🔥 Always prepend "/api"
+    const url = `/api${endpoint}`;
+
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -14,7 +24,7 @@ const fetchData = async (endpoint) => {
     return response.data;
   } catch (error) {
     console.error("❌ API Error:", error.response?.data || error.message);
-    throw error.response?.data || { message: "Unexpected error" };
+    throw error.response?.data || { message: "Unexpected error occurred" };
   }
 };
 
