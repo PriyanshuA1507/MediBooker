@@ -15,21 +15,27 @@ const Doctors = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.root);
 
-const loadAllDoctors = async () => {
-  try {
-    dispatch(setLoading(true));
+  const loadAllDoctors = async () => {
+    try {
+      dispatch(setLoading(true));
 
-    const response = await fetchData("/api/doctor/getalldoctors");
+      const response = await fetchData("/api/doctor/getalldoctors");
+      console.log("RESPONSE FROM BACKEND:", response);
 
-    console.log("RESPONSE FROM BACKEND:", response);  // ⬅️ ADD THIS
+      // 🔥 IMPORTANT — Filter out doctors with missing or corrupted userId
+      const cleanedDoctors = (response || []).filter(
+        (d) => d && d.userId && d.userId.firstname
+      );
 
-    setDoctors(response || []);
-  } catch (error) {
-    console.error("Error fetching doctors:", error);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+      setDoctors(cleanedDoctors);
+    } catch (error) {
+      console.error("Error fetching doctors:", error);
+      toast.error("Unable to fetch doctors.");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   useEffect(() => {
     loadAllDoctors();
   }, []);
@@ -46,7 +52,7 @@ const loadAllDoctors = async () => {
           {doctors.length > 0 ? (
             <div className="doctors-card-container">
               {doctors.map((doctor) => (
-                <DoctorProfileCard key={doctor._id} doctor={doctor} />
+                <DoctorProfileCard key={doctor._id} ele={doctor} />
               ))}
             </div>
           ) : (
