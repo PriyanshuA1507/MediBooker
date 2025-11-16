@@ -8,6 +8,7 @@ const DoctorCard = ({ ele }) => {
   const token = localStorage.getItem("token") || "";
 
   const doctor = ele;
+  const user = doctor?.userId || {};
 
   const handleAppointmentModal = () => {
     if (!token) {
@@ -22,32 +23,32 @@ const DoctorCard = ({ ele }) => {
       <div className="card-img flex-center">
         <img
           src={
-            doctor?.userId?.pic ||
+            user.pic ||
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
           }
-          alt={doctor?.userId?.name || "Doctor"}
+          alt={`${user.firstname || ""} ${user.lastname || ""}`}
           className="doctor-profile-img"
         />
       </div>
 
       <h3 className="card-name">
-        Dr. {doctor?.userId?.name || "Unknown"}
+        Dr. {user.firstname || "Unknown"} {user.lastname || ""}
       </h3>
 
       <p className="specialization">
-        <strong>Specialization:</strong> {doctor?.specialization || "N/A"}
+        <strong>Specialization:</strong> {doctor.specialization || "N/A"}
       </p>
 
       <p className="experience">
-        <strong>Experience:</strong> {doctor?.experience || 0} yrs
+        <strong>Experience:</strong> {doctor.experience || 0} yrs
       </p>
 
       <p className="fees">
-        <strong>Consultation Fee:</strong> ₹{doctor?.fees || 0}
+        <strong>Consultation Fee:</strong> ₹{doctor.fees || 0}
       </p>
 
       <p className="phone">
-        <strong>Phone:</strong> {doctor?.userId?.mobile || "Not available"}
+        <strong>Phone:</strong> {user.mobile || "Not available"}
       </p>
 
       <button className="btn appointment-btn" onClick={handleAppointmentModal}>
@@ -55,7 +56,10 @@ const DoctorCard = ({ ele }) => {
       </button>
 
       {isModalOpen && (
-        <BookDoctorAppointment setModalOpen={setIsModalOpen} ele={doctor} />
+        <BookDoctorAppointment
+          setModalOpen={setIsModalOpen}
+          ele={doctor}
+        />
       )}
     </div>
   );
