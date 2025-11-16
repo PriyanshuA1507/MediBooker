@@ -34,13 +34,11 @@ const ApplyDoctor = () => {
     try {
       await toast.promise(
         axios.post(
-          API, // FULL URL — NOT RELATIVE
+          API,
           {
-            formDetails: {
-              specialization,
-              experience,
-              fees,
-            },
+            specialization,
+            experience,
+            fees, // <-- NO formDetails wrapper
           },
           {
             headers: {
