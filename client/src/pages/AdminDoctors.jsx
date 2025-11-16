@@ -11,10 +11,11 @@ const AdminDoctors = () => {
   const [pendingDoctors, setPendingDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Load all pending doctors
   const loadPendingDoctors = async () => {
     try {
       setLoading(true);
-      const res = await fetchData("/doctor/getnotdoctors");
+      const res = await fetchData("/doctor/getnotdoctors"); // Correct path
       setPendingDoctors(res || []);
     } catch {
       toast.error("Unable to load doctor applications");
@@ -23,6 +24,7 @@ const AdminDoctors = () => {
     }
   };
 
+  // APPROVE DOCTOR
   const approveDoctor = async (doctor) => {
     try {
       await toast.promise(
@@ -43,6 +45,7 @@ const AdminDoctors = () => {
     }
   };
 
+  // REJECT DOCTOR
   const rejectDoctor = async (doctor) => {
     try {
       await toast.promise(
@@ -63,6 +66,7 @@ const AdminDoctors = () => {
     }
   };
 
+  // DELETE DOCTOR
   const deleteDoctor = async (doctor) => {
     try {
       await toast.promise(
@@ -70,11 +74,11 @@ const AdminDoctors = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          data: { id: doctor?.userId?._id },
+          data: { id: doctor?.userId?._id }, // DELETE requires data in config
         }),
         {
           loading: "Deleting doctor...",
-          success: "Doctor deleted!",
+          success: "Doctor deleted successfully!",
           error: "Failed to delete doctor.",
         }
       );
@@ -91,6 +95,7 @@ const AdminDoctors = () => {
   return (
     <>
       <Navbar />
+
       {loading ? (
         <Loading />
       ) : (
@@ -120,10 +125,28 @@ const AdminDoctors = () => {
                     <td>{doc.specialization}</td>
                     <td>{doc.experience} yrs</td>
                     <td>₹{doc.fees}</td>
+
                     <td>
-                      <button className="btn accept-btn" onClick={() => approveDoctor(doc)}>Approve</button>
-                      <button className="btn reject-btn" onClick={() => rejectDoctor(doc)}>Reject</button>
-                      <button className="btn delete-btn" onClick={() => deleteDoctor(doc)}>Delete</button>
+                      <button
+                        className="btn accept-btn"
+                        onClick={() => approveDoctor(doc)}
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        className="btn reject-btn"
+                        onClick={() => rejectDoctor(doc)}
+                      >
+                        Reject
+                      </button>
+
+                      <button
+                        className="btn delete-btn"
+                        onClick={() => deleteDoctor(doc)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
