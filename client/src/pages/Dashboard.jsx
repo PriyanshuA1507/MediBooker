@@ -1,10 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Users from "../components/Users";
-
-// FIXED IMPORTS — AdminDoctors is inside /pages, NOT /components
-import AdminDoctors from "../pages/AdminDoctors";
-
+import AdminDoctors from "../pages/AdminDoctors";  // FIXED PATH
 import AdminApplications from "../components/AdminApplications";
 import AdminAppointments from "../components/AdminAppointments";
 import "../styles/dashboard.css";
@@ -16,8 +13,8 @@ const Dashboard = ({ type }) => {
         return <Users />;
       case "doctors":
         return <AdminDoctors />;
-      case "doctorApplications":
-        return <AdminDoctors />; // NEW TYPE SUPPORT
+      case "doctorApplications":    // NEW CASE
+        return <AdminDoctors />;
       case "applications":
         return <AdminApplications />;
       case "appointments":
