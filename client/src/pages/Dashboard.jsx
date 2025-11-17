@@ -1,7 +1,10 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Users from "../components/Users";
-import AdminDoctors from "../components/AdminDoctors";
+
+// FIXED IMPORTS — AdminDoctors is inside /pages, NOT /components
+import AdminDoctors from "../pages/AdminDoctors";
+
 import AdminApplications from "../components/AdminApplications";
 import AdminAppointments from "../components/AdminAppointments";
 import "../styles/dashboard.css";
@@ -11,19 +14,14 @@ const Dashboard = ({ type }) => {
     switch (type) {
       case "users":
         return <Users />;
-
       case "doctors":
         return <AdminDoctors />;
-
-      case "doctorApplications":   // ✅ STEP 2 Applied  
-        return <AdminDoctors />;   // Load Pending Doctor Applications
-
+      case "doctorApplications":
+        return <AdminDoctors />; // NEW TYPE SUPPORT
       case "applications":
         return <AdminApplications />;
-
       case "appointments":
         return <AdminAppointments />;
-
       default:
         return (
           <div className="flex-center" style={{ flex: 1 }}>
