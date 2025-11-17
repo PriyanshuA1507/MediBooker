@@ -24,95 +24,101 @@ function App() {
       <Toaster />
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/admin/doctors" element={<AdminDoctors />} />
-          <Route
-            path="/login"
-            element={<Login />}
-          />
-          <Route
-            path="/register"
-            element={
-              <Public>
-                <Register />
-              </Public>
-            }
-          />
-          <Route
-            path="/"
-            element={<Home />}
-          />
-          <Route
-            path="/doctors"
-            element={<Doctors />}
-          />
-          <Route
-            path="/appointments"
-            element={
-              <Protected>
-                <Appointments />
-              </Protected>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <Protected>
-                <Notifications />
-              </Protected>
-            }
-          />
-          <Route
-            path="/applyfordoctor"
-            element={
-              <Protected>
-                <ApplyDoctor />
-              </Protected>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <Protected>
-                <Profile />
-              </Protected>
-            }
-          />
-          <Route
-            path="/dashboard/users"
-            element={
-              <Admin>
-                <Dashboard type={"users"} />
-              </Admin>
-            }
-          />
-          <Route
-            path="/dashboard/doctors"
-            element={
-              <Admin>
-                <Dashboard type={"doctors"} />
-              </Admin>
-            }
-          />
-          <Route
-            path="/dashboard/appointments"
-            element={
-              <Protected>
-                <Dashboard type={"appointments"} />
-              </Protected>
-            }
-          />
-          <Route
-            path="/dashboard/applications"
-            element={
-              <Protected>
-                <Dashboard type={"applications"} />
-              </Protected>
-            }
-          />
-          <Route
-            path="*"
-            element={<Error />}
-          />
+         <Route
+  path="/dashboard/doctor-applications"
+  element={
+    <Admin>
+      <Dashboard type={"doctorApplications"} />
+    </Admin>
+  }
+/> <Route path="/login" element={<Login />} />
+
+  <Route
+    path="/register"
+    element={
+      <Public>
+        <Register />
+      </Public>
+    }
+  />
+
+  <Route path="/" element={<Home />} />
+  <Route path="/doctors" element={<Doctors />} />
+
+  <Route
+    path="/appointments"
+    element={
+      <Protected>
+        <Appointments />
+      </Protected>
+    }
+  />
+
+  <Route
+    path="/notifications"
+    element={
+      <Protected>
+        <Notifications />
+      </Protected>
+    }
+  />
+
+  <Route
+    path="/applyfordoctor"
+    element={
+      <Protected>
+        <ApplyDoctor />
+      </Protected>
+    }
+  />
+
+  <Route
+    path="/profile"
+    element={
+      <Protected>
+        <Profile />
+      </Protected>
+    }
+  />
+
+  {/* ---------------- ADMIN ROUTES ---------------- */}
+  <Route
+    path="/dashboard/users"
+    element={
+      <Admin>
+        <Dashboard type={"users"} />
+      </Admin>
+    }
+  />
+
+  <Route
+    path="/dashboard/doctors"
+    element={
+      <Admin>
+        <Dashboard type={"doctors"} />
+      </Admin>
+    }
+  />
+
+  <Route
+    path="/dashboard/appointments"
+    element={
+      <Admin>
+        <Dashboard type={"appointments"} />
+      </Admin>
+    }
+  />
+
+  <Route
+    path="/dashboard/doctor-applications"
+    element={
+      <Admin>
+        <Dashboard type={"doctorApplications"} />
+      </Admin>
+    }
+  />
+
+  <Route path="*" element={<Error />} />
         </Routes>
       </Suspense>
     </Router>
