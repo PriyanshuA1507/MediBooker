@@ -7,6 +7,7 @@ import { Protected, Public, Admin } from "./middleware/route";
 import React, { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
 
+// Lazy-loaded Pages
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Appointments = lazy(() => import("./pages/Appointments"));
@@ -23,9 +24,8 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
 
-          {/* ---------- PUBLIC ROUTES ---------- */}
+          {/* ------------------ AUTH ------------------ */}
           <Route path="/login" element={<Login />} />
-
           <Route
             path="/register"
             element={
@@ -35,10 +35,11 @@ function App() {
             }
           />
 
+          {/* ------------------ PUBLIC ------------------ */}
           <Route path="/" element={<Home />} />
           <Route path="/doctors" element={<Doctors />} />
 
-          {/* ---------- PROTECTED ROUTES ---------- */}
+          {/* ------------------ PROTECTED ------------------ */}
           <Route
             path="/appointments"
             element={
@@ -75,7 +76,7 @@ function App() {
             }
           />
 
-          {/* ---------- ADMIN ROUTES ---------- */}
+          {/* ------------------ ADMIN ROUTES ------------------ */}
           <Route
             path="/dashboard/users"
             element={
@@ -103,7 +104,6 @@ function App() {
             }
           />
 
-          {/* ⭐ NEW — Doctor Applications (Admin Panel) */}
           <Route
             path="/dashboard/doctor-applications"
             element={
@@ -113,7 +113,7 @@ function App() {
             }
           />
 
-          {/* ---------- FALLBACK ---------- */}
+          {/* 404 Page */}
           <Route path="*" element={<Error />} />
         </Routes>
       </Suspense>
