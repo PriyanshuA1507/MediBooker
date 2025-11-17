@@ -1,38 +1,3 @@
-// import React from "react";
-// import AdminApplications from "../components/AdminApplications";
-// import AdminAppointments from "../components/AdminAppointments";
-// import AdminDoctors from "../components/AdminDoctors";
-// import Sidebar from "../components/Sidebar";
-// import Users from "../components/Users";
-
-// const Dashboard = (props) => {
-//   const { type } = props;
-//   return (
-//     <>
-//       <section className="layout-section">
-//         <div className="layout-container">
-//           <Sidebar />
-//           {type === "users" ? (
-//             <Users />
-//           ) : type === "doctors" ? (
-//             <AdminDoctors />
-//           ) : type === "applications" ? (
-//             <AdminApplications />
-//           ) : type === "appointments" ? (
-//             <AdminAppointments />
-//           ) : (
-//             <></>
-//           )}
-//         </div>
-//       </section>
-//     </>
-//   );
-// };
-
-// export default Dashboard;
-// Admin Dashboard Page
-// Developed by Priyanshu for MediBooker
-
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Users from "../components/Users";
@@ -46,12 +11,19 @@ const Dashboard = ({ type }) => {
     switch (type) {
       case "users":
         return <Users />;
+
       case "doctors":
         return <AdminDoctors />;
+
+      case "doctorApplications":   // ✅ STEP 2 Applied  
+        return <AdminDoctors />;   // Load Pending Doctor Applications
+
       case "applications":
         return <AdminApplications />;
+
       case "appointments":
         return <AdminAppointments />;
+
       default:
         return (
           <div className="flex-center" style={{ flex: 1 }}>
