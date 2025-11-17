@@ -1,8 +1,8 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Users from "../components/Users";
-import AdminDoctors from "../pages/AdminDoctors";  // FIXED PATH
-import AdminApplications from "../components/AdminApplications";
+import AdminDoctors from "../pages/AdminDoctors";
+import AdminDoctorApplications from "../pages/AdminDoctorApplications";
 import AdminAppointments from "../components/AdminAppointments";
 import "../styles/dashboard.css";
 
@@ -11,20 +11,18 @@ const Dashboard = ({ type }) => {
     switch (type) {
       case "users":
         return <Users />;
-      case "doctors":
+
+      case "doctors":              // ✔️ ALL doctors
         return <AdminDoctors />;
-      case "doctorApplications":    // NEW CASE
-        return <AdminDoctors />;
-      case "applications":
-        return <AdminApplications />;
+
+      case "doctorApplications":   // ✔️ ONLY PENDING doctors
+        return <AdminDoctorApplications />;
+
       case "appointments":
         return <AdminAppointments />;
+
       default:
-        return (
-          <div className="flex-center" style={{ flex: 1 }}>
-            <h3>No section selected</h3>
-          </div>
-        );
+        return <div className="flex-center"><h3>No section selected</h3></div>;
     }
   };
 
