@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   FaHome,
@@ -14,17 +13,30 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../redux/reducers/rootSlice";
 
-// Admin Sidebar designed by Priyanshu for MediBooker
+// Admin Sidebar for MediBooker
 const AdminSidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const menuItems = [
     { name: "Home", path: "/", icon: <FaHome /> },
+
+    // All users
     { name: "Users", path: "/dashboard/users", icon: <FaUsers /> },
+
+    // All approved doctors
     { name: "Doctors", path: "/dashboard/doctors", icon: <FaUserMd /> },
+
+    // All appointments
     { name: "Appointments", path: "/dashboard/appointments", icon: <FaList /> },
-    { name: "Applications", path: "/dashboard/applications", icon: <FaEnvelope /> },
+
+    // Pending Doctor Applications
+    {
+      name: "Applications",
+      path: "/dashboard/doctor-applications",
+      icon: <FaEnvelope />,
+    },
+
     { name: "Profile", path: "/profile", icon: <FaUser /> },
   ];
 
@@ -46,7 +58,12 @@ const AdminSidebar = () => {
           {menuItems.map((item, index) => (
             <li key={index}>
               {item.icon}
-              <NavLink to={item.path}>{item.name}</NavLink>
+              <NavLink
+                to={item.path}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                {item.name}
+              </NavLink>
             </li>
           ))}
         </ul>
