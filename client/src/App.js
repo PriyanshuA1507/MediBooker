@@ -6,8 +6,6 @@ import { Toaster } from "react-hot-toast";
 import { Protected, Public, Admin } from "./middleware/route";
 import React, { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
-import AdminDoctors from "./pages/AdminDoctors";
-
 
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -24,101 +22,99 @@ function App() {
       <Toaster />
       <Suspense fallback={<Loading />}>
         <Routes>
-         <Route
-  path="/dashboard/doctor-applications"
-  element={
-    <Admin>
-      <Dashboard type={"doctorApplications"} />
-    </Admin>
-  }
-/> <Route path="/login" element={<Login />} />
 
-  <Route
-    path="/register"
-    element={
-      <Public>
-        <Register />
-      </Public>
-    }
-  />
+          {/* ---------- PUBLIC ROUTES ---------- */}
+          <Route path="/login" element={<Login />} />
 
-  <Route path="/" element={<Home />} />
-  <Route path="/doctors" element={<Doctors />} />
+          <Route
+            path="/register"
+            element={
+              <Public>
+                <Register />
+              </Public>
+            }
+          />
 
-  <Route
-    path="/appointments"
-    element={
-      <Protected>
-        <Appointments />
-      </Protected>
-    }
-  />
+          <Route path="/" element={<Home />} />
+          <Route path="/doctors" element={<Doctors />} />
 
-  <Route
-    path="/notifications"
-    element={
-      <Protected>
-        <Notifications />
-      </Protected>
-    }
-  />
+          {/* ---------- PROTECTED ROUTES ---------- */}
+          <Route
+            path="/appointments"
+            element={
+              <Protected>
+                <Appointments />
+              </Protected>
+            }
+          />
 
-  <Route
-    path="/applyfordoctor"
-    element={
-      <Protected>
-        <ApplyDoctor />
-      </Protected>
-    }
-  />
+          <Route
+            path="/notifications"
+            element={
+              <Protected>
+                <Notifications />
+              </Protected>
+            }
+          />
 
-  <Route
-    path="/profile"
-    element={
-      <Protected>
-        <Profile />
-      </Protected>
-    }
-  />
+          <Route
+            path="/applyfordoctor"
+            element={
+              <Protected>
+                <ApplyDoctor />
+              </Protected>
+            }
+          />
 
-  {/* ---------------- ADMIN ROUTES ---------------- */}
-  <Route
-    path="/dashboard/users"
-    element={
-      <Admin>
-        <Dashboard type={"users"} />
-      </Admin>
-    }
-  />
+          <Route
+            path="/profile"
+            element={
+              <Protected>
+                <Profile />
+              </Protected>
+            }
+          />
 
-  <Route
-    path="/dashboard/doctors"
-    element={
-      <Admin>
-        <Dashboard type={"doctors"} />
-      </Admin>
-    }
-  />
+          {/* ---------- ADMIN ROUTES ---------- */}
+          <Route
+            path="/dashboard/users"
+            element={
+              <Admin>
+                <Dashboard type="users" />
+              </Admin>
+            }
+          />
 
-  <Route
-    path="/dashboard/appointments"
-    element={
-      <Admin>
-        <Dashboard type={"appointments"} />
-      </Admin>
-    }
-  />
+          <Route
+            path="/dashboard/doctors"
+            element={
+              <Admin>
+                <Dashboard type="doctors" />
+              </Admin>
+            }
+          />
 
-  <Route
-    path="/dashboard/doctor-applications"
-    element={
-      <Admin>
-        <Dashboard type={"doctorApplications"} />
-      </Admin>
-    }
-  />
+          <Route
+            path="/dashboard/appointments"
+            element={
+              <Admin>
+                <Dashboard type="appointments" />
+              </Admin>
+            }
+          />
 
-  <Route path="*" element={<Error />} />
+          {/* ⭐ NEW — Doctor Applications (Admin Panel) */}
+          <Route
+            path="/dashboard/doctor-applications"
+            element={
+              <Admin>
+                <Dashboard type="doctorApplications" />
+              </Admin>
+            }
+          />
+
+          {/* ---------- FALLBACK ---------- */}
+          <Route path="*" element={<Error />} />
         </Routes>
       </Suspense>
     </Router>
