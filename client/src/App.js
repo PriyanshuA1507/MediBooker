@@ -86,14 +86,17 @@ function App() {
             }
           />
 
-          <Route
-            path="/dashboard/doctors"
-            element={
-              <Admin>
-                <Dashboard type="doctors" />
-              </Admin>
-            }
-          />
+            <Route
+  path="/dashboard/doctors"
+  element={<Admin><Dashboard type="doctors" /></Admin>}
+/>
+
+<Route
+  path="/dashboard/doctor-applications"
+  element={<Admin><Dashboard type="doctorApplications" /></Admin>}
+/>
+
+          
 
           <Route
             path="/dashboard/appointments"
@@ -104,14 +107,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/dashboard/doctor-applications"
-            element={
-              <Admin>
-                <Dashboard type="doctorApplications" />
-              </Admin>
-            }
-          />
+          
 
           {/* 404 Page */}
           <Route path="*" element={<Error />} />
